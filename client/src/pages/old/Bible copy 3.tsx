@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Search, Book, CheckCircle2 } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 
 const bibleBooks = [
   "Gênesis", "Êxodo", "Levítico", "Números", "Deuteronômio",
@@ -10,22 +11,15 @@ const bibleBooks = [
   "Mateus", "Marcos", "Lucas", "João", "Atos",
 ];
 
-const TOTAL_STEPS = 6; // número de círculos por card
-
 export default function Bible() {
-  const [readBooks, setReadBooks] = useState<Record<string, number>>({});
+  const [readBooks, setReadBooks] = useState<string[]>([]);
 
   useEffect(() => {
-    const randomProgress: Record<string, number> = {};
-    bibleBooks.forEach((book) => {
-      randomProgress[book] = Math.floor(Math.random() * TOTAL_STEPS); // 0 a 5
-    });
-    setReadBooks(randomProgress);
+    const randomRead = bibleBooks.filter(() => Math.random() < 0.4);
+    setReadBooks(randomRead);
   }, []);
 
-  const totalProgress = Math.round(
-    (Object.values(readBooks).reduce((a, b) => a + b, 0) / (bibleBooks.length * (TOTAL_STEPS - 1))) * 100
-  );
+  const totalProgress = Math.round((readBooks.length / bibleBooks.length) * 100);
 
   return (
     <div className="space-y-6 pb-6">
@@ -35,15 +29,13 @@ export default function Bible() {
           Bíblia Sagrada
         </h2>
 
-        {/* Barra de progresso geral */}
+        {/* Barra de progresso total */}
         <div>
           <div className="flex justify-between items-center mb-1">
-            <span className="text-sm text-muted-foreground">Progresso geral</span>
-            <span className="text-sm font-medium text-emerald-500">{totalProgress}%</span>
+            <span className="text-sm text-muted-foreground">Progresso Total</span>
+            <span className="text-sm font-medium text-primary">{totalProgress}%</span>
           </div>
-          <div className="h-2 bg-gray-200 rounded overflow-hidden">
-            <div className="h-2 bg-emerald-500" style={{ width: `${totalProgress}%` }}></div>
-          </div>
+          <Progress value={totalProgress} className="h-2" />
         </div>
 
         {/* Busca */}
@@ -64,29 +56,34 @@ export default function Bible() {
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {bibleBooks.map((book) => {
-            const bookProgress = readBooks[book] || 0;
+            const isRead = readBooks.includes(book);
+            const bookProgress = isRead ? 100 : 0;
             return (
               <Card
                 key={book}
-                className="p-4 cursor-pointer hover-elevate active-elevate-2 transition flex flex-col gap-2"
+                className="p-4 cursor-pointer hover-elevate active-elevate-2 transition flex flex-col"
                 data-testid={`card-book-${book}`}
               >
-                <div className="flex items-center justify-between">
-                  <span className={`text-sm font-medium ${bookProgress > 0 ? "text-emerald-700" : "text-foreground"}`}>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 
+                    ${isRead ? "bg-primary/20" : "bg-primary/10"}`}>
+                    {isRead ? (
+                      <CheckCircle2 className="w-5 h-5 text-primary" />
+                    ) : (
+                      <Book className="w-5 h-5 text-primary" />
+                    )}
+                  </div>
+                  <span className="text-sm font-medium text-foreground flex-1 break-words">
                     {book}
                   </span>
-                  {bookProgress === TOTAL_STEPS - 1 && <CheckCircle2 className="w-5 h-5 text-emerald-500" />}
+                  {isRead && (
+                    <span className="text-xs text-primary font-semibold">
+                      Lido
+                    </span>
+                  )}
                 </div>
-
-                {/* Linha de evolução com círculos verdes */}
-                <div className="flex gap-1 mt-2">
-                  {Array.from({ length: TOTAL_STEPS }).map((_, index) => (
-                    <div
-                      key={index}
-                      className={`w-4 h-4 rounded-full ${index <= bookProgress ? "bg-emerald-500" : "bg-gray-200"}`}
-                    ></div>
-                  ))}
-                </div>
+                {/* Barra de progresso do livro */}
+                <Progress value={bookProgress} className={`h-2 rounded-full ${isRead ? "bg-primary/30" : "bg-primary/10"}`} />
               </Card>
             );
           })}

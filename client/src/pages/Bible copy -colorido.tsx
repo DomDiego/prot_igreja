@@ -10,7 +10,7 @@ const bibleBooks = [
   "Mateus", "Marcos", "Lucas", "João", "Atos",
 ];
 
-const TOTAL_STEPS = 6; // número de círculos por card
+const colors = ["bg-gray-200", "bg-green-200", "bg-yellow-300", "bg-orange-400", "bg-red-400", "bg-blue-600"];
 
 export default function Bible() {
   const [readBooks, setReadBooks] = useState<Record<string, number>>({});
@@ -18,13 +18,13 @@ export default function Bible() {
   useEffect(() => {
     const randomProgress: Record<string, number> = {};
     bibleBooks.forEach((book) => {
-      randomProgress[book] = Math.floor(Math.random() * TOTAL_STEPS); // 0 a 5
+      randomProgress[book] = Math.floor(Math.random() * 6); // 0 a 5
     });
     setReadBooks(randomProgress);
   }, []);
 
   const totalProgress = Math.round(
-    (Object.values(readBooks).reduce((a, b) => a + b, 0) / (bibleBooks.length * (TOTAL_STEPS - 1))) * 100
+    (Object.values(readBooks).reduce((a, b) => a + b, 0) / (bibleBooks.length * 5)) * 100
   );
 
   return (
@@ -39,10 +39,10 @@ export default function Bible() {
         <div>
           <div className="flex justify-between items-center mb-1">
             <span className="text-sm text-muted-foreground">Progresso geral</span>
-            <span className="text-sm font-medium text-emerald-500">{totalProgress}%</span>
+            <span className="text-sm font-medium text-primary">{totalProgress}%</span>
           </div>
           <div className="h-2 bg-gray-200 rounded overflow-hidden">
-            <div className="h-2 bg-emerald-500" style={{ width: `${totalProgress}%` }}></div>
+            <div className="h-2 bg-primary" style={{ width: `${totalProgress}%` }}></div>
           </div>
         </div>
 
@@ -72,18 +72,18 @@ export default function Bible() {
                 data-testid={`card-book-${book}`}
               >
                 <div className="flex items-center justify-between">
-                  <span className={`text-sm font-medium ${bookProgress > 0 ? "text-emerald-700" : "text-foreground"}`}>
+                  <span className={`text-sm font-medium ${bookProgress > 0 ? "text-blue-800" : "text-foreground"}`}>
                     {book}
                   </span>
-                  {bookProgress === TOTAL_STEPS - 1 && <CheckCircle2 className="w-5 h-5 text-emerald-500" />}
+                  {bookProgress === 5 && <CheckCircle2 className="w-5 h-5 text-blue-600" />}
                 </div>
 
-                {/* Linha de evolução com círculos verdes */}
+                {/* Linha de evolução com círculos coloridos */}
                 <div className="flex gap-1 mt-2">
-                  {Array.from({ length: TOTAL_STEPS }).map((_, index) => (
+                  {colors.map((color, index) => (
                     <div
                       key={index}
-                      className={`w-4 h-4 rounded-full ${index <= bookProgress ? "bg-emerald-500" : "bg-gray-200"}`}
+                      className={`w-4 h-4 rounded-full ${index <= bookProgress ? color : "bg-gray-200"}`}
                     ></div>
                   ))}
                 </div>

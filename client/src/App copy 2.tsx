@@ -15,7 +15,9 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/biblia" component={Bible} />
+      {/*<Route path="/eventos" component={Events} />*/}
       <Route path="/pedidos" component={PrayerRequests} />
+      {/*<Route path="/configuracoes" component={Settings} />*/}
     </Switch>
   );
 }

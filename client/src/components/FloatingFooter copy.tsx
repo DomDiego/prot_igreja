@@ -1,10 +1,12 @@
-import { Home, BookOpen, Heart } from "lucide-react";
+import { Home, BookOpen, Calendar, Heart, Settings } from "lucide-react";
 import { useLocation } from "wouter";
 
 const navItems = [
   { icon: Home, label: "Início", path: "/" },
   { icon: BookOpen, label: "Plano Bíblico", path: "/biblia" },
+  //{ icon: Calendar, label: "Eventos", path: "/eventos" },
   { icon: Heart, label: "Pedidos", path: "/pedidos" },
+ // { icon: Settings, label: "Config", path: "/configuracoes" },
 ];
 
 export default function FloatingFooter() {
@@ -12,12 +14,12 @@ export default function FloatingFooter() {
 
   return (
     <footer className="fixed bottom-0 left-0 right-0 z-50 h-16 border-t bg-card/95 backdrop-blur-xl safe-area-inset-bottom">
-      <nav className="max-w-2xl mx-auto h-full flex items-center justify-center">
-        <div className="flex gap-12">
+      <nav className="max-w-2xl mx-auto h-full">
+        <div className="grid grid-cols-5 h-full">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = location === item.path;
-
+            
             return (
               <button
                 key={item.path}

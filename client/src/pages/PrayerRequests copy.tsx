@@ -2,52 +2,24 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Heart, Send, MessageSquare } from "lucide-react";
+import { Heart, Send } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
-// pedidos iniciais com exemplos de resposta pastoral
-const initialPrayers = [
-  { 
-    id: 1, 
-    name: "Maria S.", 
-    request: "Oração pela saúde da minha mãe", 
-    time: "2h atrás", 
-    response: "Estamos orando com fé pela recuperação dela 🙏 - Pr. Paulo"
-  },
-  { 
-    id: 2, 
-    name: "João P.", 
-    request: "Pedindo sabedoria para decisões importantes", 
-    time: "5h atrás", 
-    response: "Confie no Senhor, Ele vai te guiar em cada passo - Irmã Ana"
-  },
-  { 
-    id: 3, 
-    name: "Ana L.", 
-    request: "Gratidão pela nova oportunidade de trabalho", 
-    time: "1d atrás",
-    response: "Louvado seja Deus por essa bênção 🙌"
-  },
+const recentPrayers = [
+  { id: 1, name: "Maria S.", request: "Oração pela saúde da minha mãe", time: "2h atrás" },
+  { id: 2, name: "João P.", request: "Pedindo sabedoria para decisões importantes", time: "5h atrás" },
+  { id: 3, name: "Ana L.", request: "Gratidão pela nova oportunidade de trabalho", time: "1d atrás" },
 ];
 
 export default function PrayerRequests() {
   const [name, setName] = useState("");
   const [request, setRequest] = useState("");
-  const [prayers, setPrayers] = useState(initialPrayers);
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (name && request) {
-      const newPrayer = {
-        id: Date.now(),
-        name,
-        request,
-        time: "Agora mesmo",
-        response: null,
-      };
-      setPrayers([newPrayer, ...prayers]);
       toast({
         title: "Pedido enviado!",
         description: "Vamos orar por você. Que Deus te abençoe!",
@@ -64,11 +36,10 @@ export default function PrayerRequests() {
           Pedidos de Oração
         </h2>
         <p className="text-sm text-muted-foreground">
-          Compartilhe seu pedido e veja mensagens de fé e apoio
+          Compartilhe seu pedido e ore pelos outros
         </p>
       </div>
 
-      {/* formulário de novo pedido */}
       <Card className="p-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
@@ -101,15 +72,14 @@ export default function PrayerRequests() {
         </form>
       </Card>
 
-      {/* lista de pedidos */}
       <div className="space-y-4">
         <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
           Pedidos Recentes
         </h3>
-        {prayers.map((prayer) => (
+        {recentPrayers.map((prayer) => (
           <Card
             key={prayer.id}
-            className="p-4 hover-elevate space-y-3"
+            className="p-4 hover-elevate"
             data-testid={`card-prayer-${prayer.id}`}
           >
             <div className="flex gap-3">
@@ -130,14 +100,6 @@ export default function PrayerRequests() {
                 </p>
               </div>
             </div>
-
-            {/* resposta / feedback pastoral */}
-            {prayer.response && (
-              <div className="ml-12 mt-2 flex items-start gap-2 bg-muted/30 rounded-lg p-3">
-                <MessageSquare className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-                <p className="text-sm text-foreground">{prayer.response}</p>
-              </div>
-            )}
           </Card>
         ))}
       </div>

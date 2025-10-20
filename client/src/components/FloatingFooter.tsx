@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 
 const navItems = [
   { icon: Home, label: "Início", path: "/" },
-  { icon: BookOpen, label: "Plano Bíblico", path: "/biblia" },
+  { icon: BookOpen, label: "Plano Bíblico ", path: "/biblia" },
   { icon: Heart, label: "Pedidos", path: "/pedidos" },
 ];
 

@@ -32,7 +32,7 @@ export default function Home() {
       />
 
       <YouTubeEmbed
-        videoId="dQw4w9WgXcQ"
+        videoId="2_0eydcXo4g"
         title="Mensagem da Semana"
       />
     </div>
